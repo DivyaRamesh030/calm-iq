@@ -1,0 +1,39 @@
+{
+  "features": [
+    "sleep_duration_hours",
+    "work_hours",
+    "mood_encoded",
+    "screen_time_hours",
+    "workout_minutes",
+    "resting_hr_bpm",
+    "spo2_avg_pct",
+    "hrv_rmssd_ms",
+    "sleep_efficiency",
+    "sleep_stage_deep_pct",
+    "sleep_stage_rem_pct",
+    "caffeine_mg",
+    "alcohol_units",
+    "steps",
+    "age",
+    "bmi",
+    "sbp_mmHg",
+    "wake_after_sleep_onset_min",
+    "mindfulness_minutes"
+  ],
+  "stats": {
+    "sleep_duration_hours": {
+      "mean": 6.99,
+      "std": 0.84,
+      "min": 3.5,
+      "max": 10.5
+    },
+    "work_hours": {
+      "mean": 5.88,
+      "std": 0.92,
+      "min": 2.6,
+      "max": 10.3
+    },
+    "mood_encoded": {
+      "mean": 2.09,
+      "std": 0.93,
+      "min": 
