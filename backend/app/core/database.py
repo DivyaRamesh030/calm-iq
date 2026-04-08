@@ -8,7 +8,7 @@ load_dotenv()
 
 DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "postgresql://postgres:Divya%402002@localhost:5432/calmiq"
+    "postgresql://postgres:postgres@localhost:5432/calmiq"
 )
 
 engine = create_engine(DATABASE_URL)

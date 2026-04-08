@@ -5,9 +5,9 @@ services:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      POSTGRES_DB: stress_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: Divya@2002
+      POSTGRES_DB: ${POSTGRES_DB:-stress_db}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -24,7 +24,8 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://postgres:Divya%402002@db:5432/stress_db
+      DATABASE_URL: ${DATABASE_URL:-postgresql://postgres:postgres@db:5432/stress_db}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://localhost:5173}
     depends_on:
       db:
         condition: service_healthy
