@@ -4,8 +4,6 @@ import os
 from app.api import users, stress_logs
 from app.core.database import engine, Base
 
-Base.metadata.create_all(bind=engine)
-
 app = FastAPI(title="calm·IQ API", version="1.0.0")
 
 
@@ -27,6 +25,11 @@ app.add_middleware(
 
 app.include_router(users.router, prefix="/api/users", tags=["users"])
 app.include_router(stress_logs.router, prefix="/api/stress", tags=["stress"])
+
+
+@app.on_event("startup")
+def startup() -> None:
+    Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 def root():
