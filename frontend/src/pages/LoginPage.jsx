@@ -36,7 +36,10 @@ export default function LoginPage() {
         navigate('/log')
       }
     } catch (err) {
-      if (err.response?.status === 404) toast.error('No account found. Please register.')
+      if (err.response?.status === 404) {
+        if (mode === 'login') toast.error('No account found. Please register.')
+        else toast.error('Registration endpoint not reachable. Please try again.')
+      }
       else if (err.response?.status === 409) toast.error('Email already registered. Please log in.')
       else toast.error(err.response?.data?.detail || 'Something went wrong')
     } finally {

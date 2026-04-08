@@ -1,6 +1,9 @@
 import axios from 'axios'
 
-const api = axios.create({ baseURL: '/api' })
+const baseURL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.PROD
+  ? 'https://calm-iq.onrender.com/api'
+  : '/api')
+const api = axios.create({ baseURL })
 
 // ── Users ────────────────────────────────────────────────────────────────────
 export const createUser = (data) => api.post('/users/', data).then(r => r.data)
