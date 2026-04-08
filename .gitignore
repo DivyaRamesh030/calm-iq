@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *.pkl
-!ml/stress_model.pkl
+!backend/ml/stress_model.pkl
 venv/
 .env
 
