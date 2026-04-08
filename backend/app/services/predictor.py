@@ -10,19 +10,49 @@ from typing import List, Dict, Any
 
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../"))
-MODEL_PATH = os.path.join(BASE_DIR, "ml", "stress_model.pkl")
 
-print("MODEL PATH:", MODEL_PATH)
-print("EXISTS:", os.path.exists(MODEL_PATH))
+
+def _model_path_candidates() -> List[str]:
+    env_model_path = os.getenv("MODEL_PATH")
+    return [
+        env_model_path or "",
+        os.path.join(BASE_DIR, "ml", "stress_model.pkl"),
+        os.path.join("/app", "ml", "stress_model.pkl"),
+    ]
+
+
+class _RuleBasedModel:
+    # Keep API compatible with sklearn estimators.
+    def predict(self, feats: np.ndarray) -> np.ndarray:
+        out = []
+        for row in feats:
+            sleep, work, mood, screen, activity, hr, spo2 = row.tolist()
+            score = (
+                45
+                + max(0, (7 - sleep) * 6)
+                + max(0, (work - 8) * 3)
+                + max(0, (2 - mood) * 4)
+                + max(0, (screen - 5) * 2)
+                + max(0, (30 - activity) * 0.25)
+                + max(0, (hr - 80) * 0.5)
+                + max(0, (98 - spo2) * 2.5)
+            )
+            out.append(min(100, max(0, score)))
+        return np.array(out, dtype=float)
 
 # =========================
 # LOAD MODEL
 # =========================
 def _load_model():
-    if os.path.exists(MODEL_PATH):
-        with open(MODEL_PATH, "rb") as f:
-            return pickle.load(f)
-    raise FileNotFoundError("❌ Model file not found: stress_model.pkl")
+    for model_path in _model_path_candidates():
+        if model_path and os.path.exists(model_path):
+            print("MODEL PATH:", model_path)
+            with open(model_path, "rb") as f:
+                return pickle.load(f)
+
+    print("MODEL PATH: not found in expected locations")
+    print("Falling back to rule-based predictor")
+    return _RuleBasedModel()
 
 
 _model = _load_model()
