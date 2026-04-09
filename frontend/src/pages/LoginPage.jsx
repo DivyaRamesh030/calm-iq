@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import toast from 'react-hot-toast'
-import { createUser, getUserByEmail } from '../services/api'
+import { createUser, loginUser } from '../services/api'
 import { useAuth } from '../hooks/useAuth'
 import styles from './LoginPage.module.css'
 
 export default function LoginPage() {
   const { login } = useAuth()
   const navigate = useNavigate()
-  const [form, setForm] = useState({ name: '', email: '', age: '', occupation: '' })
+  const [form, setForm] = useState({ name: '', email: '', password: '', age: '', occupation: '' })
   const [loading, setLoading] = useState(false)
   const [mode, setMode] = useState('login') // 'login' | 'register'
 
@@ -16,10 +16,14 @@ export default function LoginPage() {
 
   const handleSubmit = async () => {
     if (!form.email.trim()) { toast.error('Email is required'); return }
+    if (!form.password.trim()) { toast.error('Password is required'); return }
     setLoading(true)
     try {
       if (mode === 'login') {
-        const user = await getUserByEmail(form.email.trim())
+        const user = await loginUser({
+          email: form.email.trim(),
+          password: form.password,
+        })
         login(user)
         toast.success(`Welcome back, ${user.name}!`)
         navigate('/log')
@@ -28,6 +32,7 @@ export default function LoginPage() {
         const user = await createUser({
           name: form.name.trim(),
           email: form.email.trim(),
+          password: form.password,
           age: form.age ? parseInt(form.age) : null,
           occupation: form.occupation.trim() || null,
         })
@@ -80,6 +85,11 @@ export default function LoginPage() {
             <label>Email address</label>
             <input type="email" placeholder="you@example.com" value={form.email} onChange={set('email')}
               onKeyDown={e => e.key === 'Enter' && handleSubmit()} />
+          </div>
+
+          <div className={styles.field}>
+            <label>Password</label>
+            <input type="password" placeholder="••••••••" value={form.password} onChange={set('password')} />
           </div>
 
           {mode === 'register' && (

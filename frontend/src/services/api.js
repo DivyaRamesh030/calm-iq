@@ -7,6 +7,7 @@ const api = axios.create({ baseURL })
 
 // ── Users ────────────────────────────────────────────────────────────────────
 export const createUser = (data) => api.post('/users/', data).then(r => r.data)
+export const loginUser = (data) => api.post('/users/login', data).then(r => r.data)
 export const getUserByEmail = (email) => api.get(`/users/by-email/${encodeURIComponent(email)}`).then(r => r.data)
 export const getUser = (id) => api.get(`/users/${id}`).then(r => r.data)
 
